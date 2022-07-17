@@ -6,12 +6,12 @@ const dbConnect = () => {
   }
 
   const mongoURI = process.env.DB_LOCAL_URI as string
-  const mongoOptions = {
-    newUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: true,
-    useCreateIndex: true,
-  } as mongoose.ConnectOptions
+  // const mongoOptions = {
+  //   newUrlParser: true,
+  //   useUnifiedTopology: true,
+  //   useFindAndModify: true,
+  //   useCreateIndex: true,
+  // } as mongoose.ConnectOptions
 
   mongoose
     .connect(mongoURI)
