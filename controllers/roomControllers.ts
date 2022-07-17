@@ -1,12 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import next from 'next'
 import Room from '../models/rooms'
+import ErrorHandler from '../utils/errorHandler'
 
 const allRooms = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const rooms = await Room.find()
     res.status(200).json({ success: true, count: rooms.length, rooms })
   } catch (error: any) {
-    res.status(400).json({ succes: false, error: error.message })
+    res.status(400).json({ success: false, error: error.message })
   }
 }
 
@@ -14,21 +16,29 @@ const allRooms = async (req: NextApiRequest, res: NextApiResponse) => {
 const newRoom = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const room = await Room.create(req.body)
-    res.status(200).json({ sucess: true, room })
+    res.status(200).json({ success: true, room })
   } catch (error: any) {
     res.status(400).json({ success: false, error: error.message })
   }
 }
 
 // Get room details => /api/rooms/:id
-const getSingleRoom = async (req: NextApiRequest, res: NextApiResponse) => {
+const getSingleRoom = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  next: any
+) => {
   try {
     const room = await Room.findById(req.query.id)
+
     if (!room) {
-      res
-        .status(404)
-        .json({ success: false, error: 'Room not found with this ID.' })
+      // res
+      //   .status(404)
+      //   .json({ success: false, error: 'Room not found with this ID.' })
+      return next()
+      // return next(new ErrorHandler('Room not found with this ID.', 404))
     }
+
     res.status(200).json({ success: true, room })
   } catch (error: any) {
     res.status(400).json({ success: false, error: error.message })
@@ -40,9 +50,7 @@ const updateRoom = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     let room = await Room.findById(req.query.id)
     if (!room) {
-      res
-        .status(404)
-        .json({ success: false, error: 'Room not found with this ID.' })
+      throw new ErrorHandler('Room not found with this ID.', 404)
     }
 
     room = await Room.findByIdAndUpdate(req.query.id, req.body, {
@@ -57,14 +65,12 @@ const updateRoom = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-// Detele room details => /api/rooms/:id
+// Delete room details => /api/rooms/:id
 const deleteRoom = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     let room = await Room.findById(req.query.id)
     if (!room) {
-      res
-        .status(404)
-        .json({ success: false, error: 'Room not found with this ID.' })
+      throw new ErrorHandler('Room not found with this ID.', 404)
     }
 
     await room.remove()
