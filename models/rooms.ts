@@ -103,4 +103,6 @@ const roomSchema = new mongoose.Schema({
   },
 })
 
-module.exports = mongoose.models.Room || mongoose.model('Room', roomSchema)
+let Room = mongoose.models.Room || mongoose.model('Room', roomSchema)
+
+module.exports = Room
