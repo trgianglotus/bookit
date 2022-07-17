@@ -35,4 +35,26 @@ const getSingleRoom = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export { allRooms, newRoom, getSingleRoom }
+// Update room details => /api/rooms/:id
+const updateRoom = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    let room = await Room.findById(req.query.id)
+    if (!room) {
+      res
+        .status(404)
+        .json({ success: false, error: 'Room not found with this ID.' })
+    }
+
+    room = await Room.findByIdAndUpdate(req.query.id, req.body, {
+      runValidator: true,
+      useFindAndModify: false,
+      returnOriginal: false,
+    })
+
+    res.status(200).json({ success: true, room })
+  } catch (error: any) {
+    res.status(400).json({ success: false, error: error.message })
+  }
+}
+
+export { allRooms, newRoom, getSingleRoom, updateRoom }
