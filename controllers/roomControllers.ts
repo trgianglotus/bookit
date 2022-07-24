@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import next from 'next'
 import Room from '../models/rooms'
 import ErrorHandler from '../utils/errorHandler'
 
@@ -35,8 +34,8 @@ const getSingleRoom = async (
       // res
       //   .status(404)
       //   .json({ success: false, error: 'Room not found with this ID.' })
-      return next()
-      // return next(new ErrorHandler('Room not found with this ID.', 404))
+      // return next()
+      return next(new ErrorHandler('Room not found with this ID.', 404))
     }
 
     res.status(200).json({ success: true, room })
@@ -61,7 +60,7 @@ const updateRoom = async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.status(200).json({ success: true, room })
   } catch (error: any) {
-    res.status(400).json({ success: false, error: error.message })
+    res.status(error.statusCode).json({ success: false, error: error.message })
   }
 }
 

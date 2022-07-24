@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { createRouter } from 'next-connect'
+import nc from 'next-connect'
 import dbConnect from '../../../config/dbConnect'
 
 import {
@@ -8,15 +8,16 @@ import {
   getSingleRoom,
   updateRoom,
 } from '../../../controllers/roomControllers'
+import onError from '../../../middleware/errors'
 
-const router = createRouter<NextApiRequest, NextApiResponse>()
+const handler = nc({ onError })
 
 dbConnect()
 
-router.get(getSingleRoom)
+handler.get(getSingleRoom)
 
-router.put(updateRoom)
+handler.put(updateRoom)
 
-router.delete(deleteRoom)
+handler.delete(deleteRoom)
 
-export default router.handler()
+export default handler
