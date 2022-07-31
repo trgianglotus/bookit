@@ -2,10 +2,18 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import Room from '../models/rooms'
 import catchAsyncErrors from '../utils/catchAsyncErrors'
 import ErrorHandler from '../utils/errorHandler'
+import APIFeatures from '../utils/apiFeatures'
 
 const allRooms = catchAsyncErrors(
   async (req: NextApiRequest, res: NextApiResponse) => {
-    const rooms = await Room.find()
+    const apiFeatures = new APIFeatures(Room.find(), req.query)
+      .search()
+      .filter()
+
+    const rooms = await apiFeatures.query
+
+    // const rooms = await Room.find()
+
     res.status(200).json({ success: true, count: rooms.length, rooms })
   }
 )
