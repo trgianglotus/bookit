@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 
 function Header() {
   return (
@@ -7,8 +6,9 @@ function Header() {
       <div className="container">
         <div className="col-3 p-0">
           <div className="navbar-brand">
-            <Image
-              src="images/bookit_logo.png"
+            <img
+              src="/images/bookit_logo.png"
+              layout="fill"
               style={{ cursor: 'pointer' }}
               alt="BookIT"
             />
